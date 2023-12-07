@@ -16,8 +16,14 @@ public class CarController : MonoBehaviour
 
     private float curYRot;
 
+    public bool canControl;
     private bool accelerateInput;
     private float turnInput;
+
+    public TrackZone curTrackZone;
+    public int zonesPassed;
+    public int racePosition;
+    public int curLap;
 
     public Rigidbody rig;
 
