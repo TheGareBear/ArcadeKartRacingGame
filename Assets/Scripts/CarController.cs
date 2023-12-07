@@ -1,18 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CarController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public float acceleration;
+    public float turnSpeed;
+    
+    public Transform carModel;
+    private Vector3 startModelOffset;
+
+    public float groundCheckRate;
+    private float lastGroundCheckTime;
+
+    private float curYRot;
+
+    private bool accelerateInput;
+    private float turnInput;
+
+    public Rigidbody rig;
+
+    void Update () {
+        Debug.Log("Accelerating: " + accelerateInput + ", Turn: " + turnInput);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void OnAccelerateInput (InputAction.CallbackContext context) {
+        if (context.phase == InputActionPhase.Performed) 
+            accelerateInput = true;
+        else
+            accelerateInput = false;
+    }
+
+    public void OnTurnInput (InputAction.CallbackContext context) {
+        turnInput = context.ReadValue<float>();
     }
 }
