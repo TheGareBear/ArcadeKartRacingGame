@@ -33,7 +33,8 @@ public class CarController : MonoBehaviour
         curYRot += turnInput * turnSpeed * turnRate * Time.deltaTime;
 
         carModel.transform.position = transform.position + startModelOffset;
-        carModel.transform.eulerAngles = new Vector3(0, curYRot, 0);
+
+        CheckGround();
     }
 
     void FixedUpdate()
@@ -41,6 +42,19 @@ public class CarController : MonoBehaviour
         if(accelerateInput == true) {
             rig.AddForce(carModel.forward * acceleration, ForceMode.Acceleration);
         }    
+    }
+
+    void CheckGround () {
+        Ray ray = new Ray(transform.position + new Vector3(0 ,-0.75f, 0), Vector3.down);
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, 1.0f)) {
+            carModel.up = hit.normal;
+        } else {
+            carModel.up = Vector3.up;
+        }
+    
+        carModel.Rotate(new Vector3(0, curYRot, 0), Space.Self);
     }
 
     public void OnAccelerateInput (InputAction.CallbackContext context) {
