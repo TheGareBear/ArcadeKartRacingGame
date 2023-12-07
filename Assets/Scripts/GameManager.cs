@@ -10,6 +10,11 @@ public class GameManager : MonoBehaviour
     public float postiionUpdateRate = 0.05f;
     private float lastPositionUpdateTime;
 
+    public bool gameStarted = false;
+    public int playersToBegin = 2;
+    
+    public Transform[] spawnPoints;
+
     void Awake() {
         instance = this;
     }
@@ -19,6 +24,26 @@ public class GameManager : MonoBehaviour
         if(Time.time - lastPositionUpdateTime > postiionUpdateRate) {
             lastPositionUpdateTime = Time.time;
             UpdateCarRacePositions();
+        }
+
+        if(!gameStarted && cars.Count == playersToBegin) {
+            gameStarted = true;
+            StartCountdown();
+        }
+    }
+
+    void StartCountdown() {
+        PlayerUI[] uis = FindObjectsOfType<PlayerUI>();
+
+        for(int x = 0; x < uis.Length; x++)
+            uis[x].StartCountdownDisplay();
+
+        Invoke("BeginGame", 3.0f);
+    }
+
+    void BeginGame() {
+        for(int x = 0; x < cars.Count; x++) {
+            cars[x].canControl = true;
         }
     }
 

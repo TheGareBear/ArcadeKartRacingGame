@@ -31,21 +31,28 @@ public class CarController : MonoBehaviour
     {
         startModelOffset = carModel.transform.localPosition;
         GameManager.instance.cars.Add(this);
+        rig.position = GameManager.instance.spawnPoints[GameManager.instance.cars.Count - 1].position;
     }
 
     void Update () {
+        if(!canControl) 
+            turnInput = 0.0f;
+        
         float turnRate = Vector3.Dot(rig.velocity.normalized, carModel.forward);
         turnRate = Mathf.Abs(turnRate);
 
         curYRot += turnInput * turnSpeed * turnRate * Time.deltaTime;
 
-        carModel.transform.position = transform.position + startModelOffset;
+        carModel.position = transform.position + startModelOffset;
 
         CheckGround();
     }
 
     void FixedUpdate()
     {
+        if(!canControl) 
+            return;
+
         if(accelerateInput == true) {
             rig.AddForce(carModel.forward * acceleration, ForceMode.Acceleration);
         }    
