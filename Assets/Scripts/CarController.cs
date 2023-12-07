@@ -21,8 +21,23 @@ public class CarController : MonoBehaviour
 
     public Rigidbody rig;
 
+    void Start()
+    {
+        startModelOffset = carModel.transform.localPosition;
+    }
+
     void Update () {
-        Debug.Log("Accelerating: " + accelerateInput + ", Turn: " + turnInput);
+        curYRot += turnInput * turnSpeed * Time.deltaTime;
+
+        carModel.transform.position = transform.position + startModelOffset;
+        carModel.transform.eulerAngles = new Vector3(0, curYRot, 0);
+    }
+
+    void FixedUpdate()
+    {
+        if(accelerateInput == true) {
+            rig.AddForce(carModel.forward * acceleration, ForceMode.Acceleration);
+        }    
     }
 
     public void OnAccelerateInput (InputAction.CallbackContext context) {
