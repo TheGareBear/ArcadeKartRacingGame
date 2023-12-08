@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     public bool gameStarted = false;
     public int playersToBegin = 2;
+
+    public int lapsToWin = 3;
     
     public Transform[] spawnPoints;
 
@@ -65,5 +68,18 @@ public class GameManager : MonoBehaviour
         float bDist = Vector3.Distance(b.transform.position, b.curTrackZone.transform.position);
 
         return aDist > bDist ? 1 : -1;
+    }
+
+    public void CheckIsWinner(CarController car) {
+        if(car.curLap == lapsToWin + 1) {
+            for(int x = 0; x < cars.Count; ++x) {
+                cars[x].canControl = false;
+            }
+
+            PlayerUI[] uis = FindObjectsOfType<PlayerUI>();
+
+            for(int x = 0; x < uis.Length; x++)
+            uis[x].GameOver(uis[x].car == car);
+        }
     }
 }
